@@ -2,6 +2,8 @@
 
 [English](README.md)
 
+通过 SerpBase 为 Codex / AI Agent 提供 Google SERP API 搜索 grounding、RAG、SEO 研究和 Google Maps 地点增强能力。
+
 这是一个给 Codex / Agent 使用的 SerpBase skill，用来通过 [SerpBase](https://serpbase.dev) 调用 Google Search、Images、News、Videos 和 Maps API。
 
 如果你的 Agent 支持 MCP，优先使用 [serpbase-mcp](https://github.com/serpbase-dev/serpbase-mcp)。如果你想用 skill 方式，把这份目录安装到 Codex skills 里即可。
