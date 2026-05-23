@@ -2,6 +2,8 @@
 
 [中文文档](README.zh-CN.md)
 
+Codex skill for Google SERP API search grounding, AI agents, RAG workflows, SEO research, and Google Maps place enrichment through SerpBase.
+
 SerpBase Skill lets Codex and other AI agents call the [SerpBase](https://serpbase.dev) Google Search, Images, News, Videos, and Maps APIs.
 
 If your agent supports MCP, prefer [serpbase-mcp](https://github.com/serpbase-dev/serpbase-mcp). Use this skill when you want a skill-native workflow or a lightweight script fallback without running an MCP server.
