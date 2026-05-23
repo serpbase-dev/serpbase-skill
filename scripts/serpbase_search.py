@@ -79,6 +79,7 @@ def call_serpbase(args: argparse.Namespace) -> dict[str, Any]:
         method="POST",
         headers={
             "Content-Type": "application/json",
+            "User-Agent": "serpbase-skill/0.1 (+https://github.com/serpbase-dev/serpbase-skill)",
             "X-API-Key": api_key,
             "X-SerpBase-Source": "serpbase-skill",
         },
@@ -92,13 +93,13 @@ def call_serpbase(args: argparse.Namespace) -> dict[str, Any]:
             data = json.loads(body)
         except json.JSONDecodeError:
             raise SystemExit(f"HTTP {exc.code}: {body}") from exc
-        raise SystemExit(json.dumps(data, ensure_ascii=False, indent=2)) from exc
+        raise SystemExit(json.dumps(data, ensure_ascii=True, indent=2)) from exc
     except urllib.error.URLError as exc:
         raise SystemExit(f"Network error: {exc.reason}") from exc
 
     data = json.loads(body)
     if data.get("status") not in (0, None):
-        raise SystemExit(json.dumps(data, ensure_ascii=False, indent=2))
+        raise SystemExit(json.dumps(data, ensure_ascii=True, indent=2))
     return data
 
 
@@ -124,9 +125,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
     data = call_serpbase(args)
     if args.compact:
-        print(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+        print(json.dumps(data, ensure_ascii=True, separators=(",", ":")))
     else:
-        print(json.dumps(data, ensure_ascii=False, indent=2))
+        print(json.dumps(data, ensure_ascii=True, indent=2))
     return 0
 
 
