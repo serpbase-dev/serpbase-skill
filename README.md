@@ -1,10 +1,10 @@
-# SerpBase Skill
+# SerpBase Agent Skill
 
 [中文文档](README.zh-CN.md)
 
-Codex skill for Google SERP API search grounding, AI agents, RAG workflows, SEO research, and Google Maps place enrichment through SerpBase.
+Agent-portable skill for Google SERP API search grounding, AI agents, RAG workflows, SEO research, and Google Maps place enrichment through SerpBase.
 
-SerpBase Skill lets Codex and other AI agents call the [SerpBase](https://serpbase.dev) Google Search, Images, News, Videos, and Maps APIs.
+SerpBase Agent Skill lets Codex, Claude Code, opencode, OpenClaw-style agents, and other AI agents call the [SerpBase](https://serpbase.dev) Google Search, Images, News, Videos, and Maps APIs.
 
 If your agent supports MCP, prefer [serpbase-mcp](https://github.com/serpbase-dev/serpbase-mcp). Use this skill when you want a skill-native workflow or a lightweight script fallback without running an MCP server.
 
@@ -16,13 +16,29 @@ If your agent supports MCP, prefer [serpbase-mcp](https://github.com/serpbase-de
 - Search Google Maps local places and fetch place details by `feature_id`.
 - Call SerpBase directly from the bundled Python script when MCP is unavailable.
 
+## Agent compatibility
+
+| Agent / client | Recommended integration |
+| --- | --- |
+| Codex | Install the folder as a Codex skill; Codex reads `SKILL.md` and `agents/openai.yaml` |
+| Claude Code | Use `CLAUDE.md` as project memory or copy its contents into Claude Code project instructions |
+| opencode | Use `AGENTS.md` as the project instruction file; `OPENCODE.md` is a short adapter |
+| OpenClaw-style agents | Use `AGENTS.md`; `OPENCLAW.md` is a short adapter |
+| Other shell-capable agents | Run `scripts/serpbase_search.py` directly |
+| MCP-capable agents | Prefer `serpbase-mcp`; use this repo as a fallback |
+
 ## File layout
 
 ```text
 serpbase-skill/
-├── SKILL.md                 # Main skill instructions loaded by agents
-├── agents/openai.yaml       # Codex UI metadata
-├── references/api.md        # SerpBase API parameters and response field reference
+├── SKILL.md                         # Codex/OpenAI skill instructions
+├── AGENTS.md                        # Generic agent instructions for opencode/OpenClaw-style tools
+├── CLAUDE.md                        # Claude Code project memory instructions
+├── OPENCODE.md                      # opencode adapter pointing to AGENTS.md
+├── OPENCLAW.md                      # OpenClaw-style adapter pointing to AGENTS.md
+├── agents/openai.yaml               # Codex UI metadata
+├── references/api.md                # SerpBase API parameters and response field reference
+├── references/agent-integration.md  # Installation notes for multiple agents
 └── scripts/serpbase_search.py
 ```
 
@@ -46,9 +62,9 @@ $env:SERPBASE_API_KEY = "your_serpbase_api_key"
 
 Do not commit API keys to public files.
 
-## Install in Codex
+## Install in agents
 
-### Option 1: copy into the Codex skills directory
+### Codex
 
 Copy the entire `serpbase-skill` directory into your Codex skills directory.
 
@@ -72,12 +88,36 @@ Restart Codex, then use:
 Use $serpbase-skill to search Google through SerpBase and return cited structured results.
 ```
 
-### Option 2: use it from a project directory
+### Claude Code
+
+Claude Code can use `CLAUDE.md` as project memory. Copy or symlink `CLAUDE.md` into the project root where Claude Code is running, or keep this repository open and ask Claude Code to follow it:
+
+```text
+Use the SerpBase instructions in CLAUDE.md to search current Google results and cite source links.
+```
+
+### opencode / OpenClaw / generic agents
+
+Use `AGENTS.md` as the project instruction file. If your agent does not automatically load `AGENTS.md`, paste the relevant section into the agent's project instructions and point it to `scripts/serpbase_search.py`.
+
+```text
+Follow AGENTS.md in the serpbase-skill folder. Use SerpBase for current Google SERP data and cite links.
+```
+
+### Use it from a project directory
 
 If this folder already exists in your workspace, point the agent to it:
 
 ```text
 Use $serpbase-skill at ./serpbase-skill to search for "OpenAI API updates" and cite sources.
+```
+
+### Universal shell fallback
+
+Any agent with shell access can call:
+
+```bash
+python /path/to/serpbase-skill/scripts/serpbase_search.py --type search --query "OpenAI API updates"
 ```
 
 ## Run the script directly
