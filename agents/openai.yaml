@@ -1,0 +1,4 @@
+interface:
+  display_name: "SerpBase"
+  short_description: "Call SerpBase Google SERP APIs from agents"
+  default_prompt: "Use $serpbase-skill to search Google through SerpBase and return cited structured results."
