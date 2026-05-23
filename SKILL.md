@@ -1,6 +1,6 @@
 ---
 name: serpbase-skill
-description: Call SerpBase Google SERP APIs from Codex or other AI agents. Use when an agent needs current Google Search, Images, News, Videos, Google Maps local search, or Google Maps place detail results through serpbase.dev; when configuring search grounding through SerpBase; or when a user asks to use a SerpBase API key directly from a skill instead of MCP.
+description: Agent-portable SerpBase skill for Codex, Claude Code, OpenClaw, opencode, and other AI coding/research agents. Use when an agent needs current Google Search, Images, News, Videos, Google Maps local search, or Google Maps place detail results through serpbase.dev; when configuring search grounding through SerpBase; or when a user asks to use a SerpBase API key directly from a reusable agent skill instead of MCP.
 ---
 
 # SerpBase Skill
@@ -8,6 +8,13 @@ description: Call SerpBase Google SERP APIs from Codex or other AI agents. Use w
 ## Overview
 
 Use SerpBase as the structured Google SERP data source for current web discovery, grounding, SEO checks, image/news/video discovery, and local Maps enrichment.
+
+This folder is agent-portable:
+
+- `SKILL.md`: Codex/OpenAI skill instructions.
+- `AGENTS.md`: generic agent instructions for tools that read project rule files, including opencode/OpenClaw-style workflows.
+- `CLAUDE.md`: Claude Code project memory instructions.
+- `scripts/serpbase_search.py`: fallback CLI that works for any agent with shell access.
 
 Prefer an installed SerpBase MCP server when available. If no MCP tool is available, run `scripts/serpbase_search.py` from this skill.
 
