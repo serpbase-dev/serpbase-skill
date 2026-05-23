@@ -1,10 +1,10 @@
-# SerpBase Skill
+# SerpBase Agent Skill
 
 [English](README.md)
 
-通过 SerpBase 为 Codex / AI Agent 提供 Google SERP API 搜索 grounding、RAG、SEO 研究和 Google Maps 地点增强能力。
+通过 SerpBase 为 Codex、Claude Code、opencode、OpenClaw 风格工具以及其他 AI Agent 提供 Google SERP API 搜索 grounding、RAG、SEO 研究和 Google Maps 地点增强能力。
 
-这是一个给 Codex / Agent 使用的 SerpBase skill，用来通过 [SerpBase](https://serpbase.dev) 调用 Google Search、Images、News、Videos 和 Maps API。
+这是一个 Agent 通用 SerpBase skill，用来通过 [SerpBase](https://serpbase.dev) 调用 Google Search、Images、News、Videos 和 Maps API。
 
 如果你的 Agent 支持 MCP，优先使用 [serpbase-mcp](https://github.com/serpbase-dev/serpbase-mcp)。如果你想用 skill 方式，把这份目录安装到 Codex skills 里即可。
 
@@ -16,13 +16,29 @@
 - 搜索 Google Maps 本地地点，并用 `feature_id` 查询地点详情
 - 在没有 MCP server 的环境里，用附带脚本直接调用 SerpBase API
 
+## Agent 兼容性
+
+| Agent / 客户端 | 推荐接入方式 |
+| --- | --- |
+| Codex | 按 Codex skill 安装；Codex 读取 `SKILL.md` 和 `agents/openai.yaml` |
+| Claude Code | 使用 `CLAUDE.md` 作为项目记忆，或把内容复制到 Claude Code 项目指令 |
+| opencode | 使用 `AGENTS.md` 作为项目指令文件；`OPENCODE.md` 是轻量适配入口 |
+| OpenClaw 风格 Agent | 使用 `AGENTS.md`；`OPENCLAW.md` 是轻量适配入口 |
+| 其他可运行 shell 的 Agent | 直接运行 `scripts/serpbase_search.py` |
+| 支持 MCP 的 Agent | 优先使用 `serpbase-mcp`，本仓库作为 fallback |
+
 ## 文件结构
 
 ```text
 serpbase-skill/
-├── SKILL.md                 # skill 主说明，Agent 会读取这里的工作流
-├── agents/openai.yaml       # Codex UI 元数据
-├── references/api.md        # SerpBase API 参数和返回字段速查
+├── SKILL.md                         # Codex/OpenAI skill 说明
+├── AGENTS.md                        # opencode / OpenClaw 风格工具的通用 agent 指令
+├── CLAUDE.md                        # Claude Code 项目记忆说明
+├── OPENCODE.md                      # 指向 AGENTS.md 的 opencode 适配入口
+├── OPENCLAW.md                      # 指向 AGENTS.md 的 OpenClaw 风格适配入口
+├── agents/openai.yaml               # Codex UI 元数据
+├── references/api.md                # SerpBase API 参数和返回字段速查
+├── references/agent-integration.md  # 多 Agent 安装说明
 └── scripts/serpbase_search.py
 ```
 
@@ -46,9 +62,9 @@ $env:SERPBASE_API_KEY = "your_serpbase_api_key"
 
 不要把 API key 写进公开文件。
 
-## 安装到 Codex
+## 安装到不同 Agent
 
-### 方法一：复制到 Codex skills 目录
+### Codex
 
 把整个 `serpbase-skill` 目录复制到 Codex skills 目录：
 
@@ -72,12 +88,36 @@ Copy-Item -Recurse .\serpbase-skill $env:USERPROFILE\.codex\skills\
 Use $serpbase-skill to search Google through SerpBase and return cited structured results.
 ```
 
-### 方法二：直接从项目目录使用
+### Claude Code
+
+Claude Code 可以使用 `CLAUDE.md` 作为项目记忆。把 `CLAUDE.md` 复制或软链到 Claude Code 当前项目根目录，或者让 Claude Code 在本仓库里按该文件执行：
+
+```text
+Use the SerpBase instructions in CLAUDE.md to search current Google results and cite source links.
+```
+
+### opencode / OpenClaw / 通用 Agent
+
+使用 `AGENTS.md` 作为项目指令文件。如果你的 Agent 不会自动读取 `AGENTS.md`，把相关内容复制到项目 instructions，并告诉它 `scripts/serpbase_search.py` 的路径。
+
+```text
+Follow AGENTS.md in the serpbase-skill folder. Use SerpBase for current Google SERP data and cite links.
+```
+
+### 直接从项目目录使用
 
 如果你在一个工作区里已经有这个目录，也可以让 Agent 明确使用：
 
 ```text
 Use $serpbase-skill at ./serpbase-skill to search for "OpenAI API updates" and cite sources.
+```
+
+### 通用 shell fallback
+
+任何能运行 shell 的 Agent 都可以直接调用：
+
+```bash
+python /path/to/serpbase-skill/scripts/serpbase_search.py --type search --query "OpenAI API updates"
 ```
 
 ## 直接运行脚本
